@@ -19,7 +19,6 @@ The current infrastructure is simple, due to the limited time, but it allows fur
 Here is an example file stored in the Mongo database:
 ```
 {
-{
   "id": "61c311c48555373cabf7e398",
   "filePath": "Folder1/FolderA/FolderB",
   "userId": "35289544-4adc-4880-bb10-34ec646d4fe7",
@@ -30,3 +29,9 @@ Here is an example file stored in the Mongo database:
 }
 ```
 As seen in the file above, the folders are virtual (like in the blob storages). We are preserving only the path to the file. So we don't have an entity for the folders. We are keeping only files with virtual paths. This allows more performant file storing and fetching.
+
+## Things that can be improved if I had more time
+- error handling can be improved with some global exceptions handler on the API side.
+- ideally this can be containerized for easier maintenace and deployment
+- the styling on the FE can be improved
+- for better scalability this could go to a sreverless solution with azure functions or AWS lambdas. Currently if we have performance issues with reading we can scale the whole app. If we are using functions, we can scale only the problematic function. 
