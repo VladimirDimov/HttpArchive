@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Filters;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -7,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Services;
 using System.Security.Claims;
+using static Services.Models.HarFileUploadModel;
 
 namespace Resource.Api
 {
@@ -42,8 +45,13 @@ namespace Resource.Api
             services.AddMvc(options =>
             {
                 options.EnableEndpointRouting = false;
+                options.Filters.Add(typeof(FluentValidationFilter));
             })
-                .SetCompatibilityVersion(CompatibilityVersion.Latest);
+                .SetCompatibilityVersion(CompatibilityVersion.Latest)
+                .AddFluentValidation(options =>
+                {
+                    options.RegisterValidatorsFromAssemblyContaining<HarFileUploadModelValidator>();
+                });
 
             services.AddServices();
         }
