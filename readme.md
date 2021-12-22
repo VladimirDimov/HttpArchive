@@ -14,3 +14,19 @@ The har files are stored in a Mongo database, which is very scalable with suppor
 
 The current infrastructure is simple, due to the limited time, but it allows further scaling. An example approach would be as follows:
 ![image](https://user-images.githubusercontent.com/10475215/147082153-1e71f79f-bce7-4453-afb3-834911385d44.png)
+
+## Files model in Mongo DB
+Here is an example file stored in the Mongo database:
+```
+{
+{
+  "id": "61c311c48555373cabf7e398",
+  "filePath": "Folder1/FolderA/FolderB",
+  "userId": "35289544-4adc-4880-bb10-34ec646d4fe7",
+  "createdOn": "2021-12-22T11:53:40.918Z",
+  "fileContent": "{...actial .har file content...}",
+  "fileName": "www.dnevnik.bg.har",
+  "sharedWith": ["user1@test.com", "user2@test.com"]
+}
+```
+As seen in the file above, the folders are virtual (like in the blob storages). We are preserving only the path to the file. So we don't have an entity for the folders. We are keeping only files with virtual paths. This allows more performant file storing and fetching.
