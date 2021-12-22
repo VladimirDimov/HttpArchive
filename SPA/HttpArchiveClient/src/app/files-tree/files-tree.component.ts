@@ -35,7 +35,7 @@ export class FilesTreeComponent implements OnInit, OnDestroy {
   }
 
   fetchData() {
-    this.spinner.show('Loading file ...');
+    this.spinner.show();
 
     this.$data
       .pipe(finalize(() => {

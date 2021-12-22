@@ -103,7 +103,7 @@ namespace Services
 
             var firstPath = folders.First();
 
-            var existingFolder = root.Folders.FirstOrDefault(f => f.Name?.ToLower() == firstPath);
+            var existingFolder = root.Folders.FirstOrDefault(f => f.Name?.ToLower() == firstPath.ToLower());
 
             if (existingFolder is null)
             {

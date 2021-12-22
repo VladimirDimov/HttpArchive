@@ -5,5 +5,6 @@ export class HarFileModel {
   createdOn: Date;
   fileContent: any;
   sharedWith: string[] = [];
-  userId: string;;
+  userId: string;
+  isSharedFile: boolean;
 };

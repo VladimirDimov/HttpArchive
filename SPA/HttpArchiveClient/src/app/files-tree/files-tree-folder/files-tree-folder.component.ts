@@ -26,7 +26,7 @@ export class FilesTreeFolderComponent implements OnInit {
   }
 
   loadFile(file: FileModel) {
-    this.spinner.show('Load file ...');
+    this.spinner.show();
     this.service.getHarFileById(file.id)
       .pipe(finalize(() => {
         this.spinner.hide();

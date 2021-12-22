@@ -40,7 +40,7 @@ export class HarFileDetailsComponent implements OnInit, OnDestroy {
   public share(): void {
     const requestData = this.fileShareForm.getRawValue();
     console.log(requestData);
-    this.spinner.show('Sharing file...')
+    this.spinner.show()
     this.service.share(requestData)
       .pipe(finalize(() => {
         this.spinner.hide();
