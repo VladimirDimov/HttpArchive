@@ -1,0 +1,24 @@
+<div class="container">
+  <ng-container *ngIf="isAuthenticated">
+    <div class="row">
+      <div class="col-6">
+        <app-har-file-upload></app-har-file-upload>
+      </div>
+      <div class="col-6">
+        <app-files-tree
+          title="My Folders"
+          [$data]="service.getUserFiles()"
+          [$refreshOn]="service.onFileUploaded"></app-files-tree>
+        <app-files-tree
+          title="Shared With Me"
+          [$data]="service.getSharedFiles()"
+          [$refreshOn]="service.onFileShared"></app-files-tree>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <app-har-file-details></app-har-file-details>
+      </div>
+    </div>
+  </ng-container>
+</div>

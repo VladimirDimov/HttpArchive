@@ -1,0 +1,12 @@
+<li>
+  <span class="caret" (click)="clickFolder($event)">{{data.name}}</span>
+  <ul class="nested">
+    <app-files-tree-folder [hidden]="!isToggled" *ngFor="let folder of data.folders" [data]="folder">
+    </app-files-tree-folder>
+    <li class="file"
+      (click)="loadFile(file)"
+      [hidden]="!isToggled"
+      *ngFor="let file of data.files">
+      {{file.fileName}}</li>
+  </ul>
+</li>

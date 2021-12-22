@@ -1,0 +1,12 @@
+<div class="container">
+  <h4>{{title}}</h4>
+  <div class="panel panel-default" *ngIf="data">
+    <div class="panel-body">
+      <div class="container">
+        <ul id="folders-tree">
+          <app-files-tree-folder [data]="data"></app-files-tree-folder>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

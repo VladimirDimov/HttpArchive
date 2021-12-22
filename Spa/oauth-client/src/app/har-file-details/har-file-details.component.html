@@ -1,0 +1,114 @@
+<div class="container" *ngIf="data">
+  <div class="row">
+    <div class="col-12">
+      <h5>Share File</h5>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <form [formGroup]="fileShareForm">
+        <label for="shareWith">Share With</label>
+        <input class="form-control" id="shareWith" formControlName="emails">
+      </form>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <button class="btn btn-primary btn-share" (click)="share()">Update Share</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <h5>File Details</h5>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <label for="exampleInputEmail1">File Name</label>
+        <input disabled class="form-control" id="exampleInputEmail1" [value]="data.fileName">
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Path</label>
+        <input disabled class="form-control" id="exampleInputEmail1" [value]="data.filePath">
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-6">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Created On</label>
+        <input disabled class="form-control" id="exampleInputEmail1" [value]="data.createdOn | date">
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Creator</label>
+        <input disabled class="form-control" id="exampleInputEmail1" [value]="data.fileContent?.log?.creator?.name">
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <h5>Requests</h5>
+    </div>
+  </div>
+
+  <ng-container class="row" *ngIf="data.fileContent?.log?.entries">
+    <div class="row request-container" *ngFor="let entry of data.fileContent.log.entries">
+      <div class="col-12">
+        <table class="table-sm table-primary">
+          <tr>
+            <th class="align-top">
+              <div>IP Address</div>
+            </th>
+            <td>{{entry.serverIPAddress}}</td>
+          </tr>
+          <tr>
+            <th class="align-top">Started Date Time</th>
+            <td>{{entry.startedDateTime | date}}</td>
+          </tr>
+          <tr>
+            <th class="align-top">Request Method</th>
+            <td>{{entry.request?.method}}</td>
+          </tr>
+          <tr>
+            <th class="align-top">Request URL</th>
+            <td>{{entry.request?.url}}</td>
+          </tr>
+          <tr>
+            <th class="align-top">Request Headers</th>
+            <td>
+              <div *ngIf="entry.request?.headers">
+                <div *ngFor="let requestHeader of entry.request?.headers">
+                  <span class="bold">{{requestHeader.name}}</span>: {{requestHeader.value}}
+                </div>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <th class="align-top">Response Code</th>
+            <td>{{entry.response?.status}}</td>
+          </tr>
+          <tr>
+            <th class="align-top">Response Headers</th>
+            <td>
+              <div *ngIf="entry.response?.headers">
+                <div *ngFor="let responseHeader of entry.response?.headers">
+                  <span class="bold">{{responseHeader.name}}</span>: {{responseHeader.value}}
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </ng-container>
+</div>

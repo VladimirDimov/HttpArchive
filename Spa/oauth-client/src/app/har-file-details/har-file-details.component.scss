@@ -1,0 +1,27 @@
+.request-container {
+  table {
+    width: 100%;
+    margin-top: 1em;
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 400px;
+
+    th div {
+      width: 100px;
+    }
+  }
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.btn-share {
+  margin-top: 1em;
+}
+
+h5 {
+  margin-top: 2em;
+}
