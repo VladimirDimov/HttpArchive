@@ -1,4 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { finalize } from 'rxjs/operators';
 import { HarFileService } from 'src/app/services/har-file-upload.service';
 import { HarFileModel } from 'src/app/shared/models/har-file.model';
 import { FileModel, FolderModel } from 'src/app/shared/models/tree.models';
@@ -11,7 +13,7 @@ import { FileModel, FolderModel } from 'src/app/shared/models/tree.models';
 export class FilesTreeFolderComponent implements OnInit {
 
 
-  constructor(private service: HarFileService) { }
+  constructor(private service: HarFileService, private spinner: NgxSpinnerService) { }
 
   public isToggled: boolean = false;
   @Input() data: FolderModel;
@@ -24,8 +26,13 @@ export class FilesTreeFolderComponent implements OnInit {
   }
 
   loadFile(file: FileModel) {
-    this.service.getHarFileById(file.id).subscribe((data: HarFileModel) => {
-      this.service.emitFileDetailsLoaded(data);
-    });
+    this.spinner.show('Load file ...');
+    this.service.getHarFileById(file.id)
+      .pipe(finalize(() => {
+        this.spinner.hide();
+      }))
+      .subscribe((data: HarFileModel) => {
+        this.service.emitFileDetailsLoaded(data);
+      });
   }
 }

@@ -1,5 +1,7 @@
-import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { Observable, Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { HarFileService } from '../services/har-file-upload.service';
 import { FolderModel } from '../shared/models/tree.models';
 
@@ -9,11 +11,12 @@ import { FolderModel } from '../shared/models/tree.models';
   styleUrls: ['./files-tree.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
-export class FilesTreeComponent implements OnInit {
+export class FilesTreeComponent implements OnInit, OnDestroy {
+  private _onDestroy = new Subject<void>();
 
-  data: FolderModel = new FolderModel();
+  constructor(private service: HarFileService, private spinner: NgxSpinnerService) { }
 
-  constructor(private service: HarFileService) { }
+  public data: FolderModel = new FolderModel();
 
   @Input() $data: Observable<FolderModel>;
   @Input() $refreshOn: Observable<FolderModel>;
@@ -21,13 +24,27 @@ export class FilesTreeComponent implements OnInit {
 
   ngOnInit() {
     this.fetchData();
-    this.$refreshOn.subscribe(_ => this.fetchData());
+    this.$refreshOn
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(_ => this.fetchData());
+  }
+
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
   }
 
   fetchData() {
-    this.$data.subscribe((data: FolderModel) => {
-      this.data = data;
-      console.log(data);
-    });
+    this.spinner.show('Loading file ...');
+
+    this.$data
+      .pipe(finalize(() => {
+        this.spinner.hide();
+      }))
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe((data: FolderModel) => {
+        this.data = data;
+        console.log(data);
+      });
   }
 }

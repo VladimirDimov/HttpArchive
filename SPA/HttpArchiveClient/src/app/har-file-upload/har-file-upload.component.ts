@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { Subject } from 'rxjs';
+import { finalize, takeUntil } from 'rxjs/operators';
 import { HarFileService } from '../services/har-file-upload.service';
 
 @Component({
@@ -7,17 +10,26 @@ import { HarFileService } from '../services/har-file-upload.service';
   templateUrl: './har-file-upload.component.html',
   styleUrls: ['./har-file-upload.component.sass']
 })
-export class HarFileUploadComponent implements OnInit {
-  fileUploadForm: FormGroup;
+export class HarFileUploadComponent implements OnInit, OnDestroy {
+  private _onDestroy = new Subject<void>();
 
-  constructor(private fb: FormBuilder, private harFileService: HarFileService) { }
+  constructor(private fb: FormBuilder,
+    private harFileService: HarFileService,
+    private spinner: NgxSpinnerService) { }
+
+  public fileUploadForm: FormGroup;
 
   ngOnInit() {
     this.fileUploadForm = this.fb.group({
       path: this.fb.control('', [Validators.maxLength(200)]),
       fileContent: this.fb.control(null, [Validators.required]),
-      fileSource: this.fb.control(null, [Validators.required]),
+      fileSource: this.fb.control(null, [Validators.required, this.validateFileSize]),
     });
+  }
+
+  ngOnDestroy() {
+    this._onDestroy.next();
+    this._onDestroy.complete();
   }
 
   public onFileChange(event) {
@@ -34,8 +46,26 @@ export class HarFileUploadComponent implements OnInit {
     formData.append('fileContent', this.fileUploadForm.get('fileSource').value);
     formData.append('filePath', this.fileUploadForm.get('path').value);
     console.log(formData);
-    this.harFileService.upload(formData).subscribe(_response => {
-      this.harFileService.emitFileUploaded();
-    });
+
+    this.spinner.show();
+    this.harFileService.upload(formData)
+      .pipe(finalize(() => {
+        this.spinner.hide();
+      }))
+      .pipe(takeUntil(this._onDestroy))
+      .subscribe(_response => {
+        this.spinner.hide();
+        this.harFileService.emitFileUploaded();
+      });
+  }
+
+  validateFileSize(control: AbstractControl) {
+    if (!control || !control.value) return null;
+    const fileSize = control.value.size ? control.value.size / 1024 / 1024 : 0;
+    if (fileSize > 10) {
+      return { fileSizeExceedLimitation: true };
+    }
+
+    return null;
   }
 }

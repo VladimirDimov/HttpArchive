@@ -4,6 +4,11 @@
       <label for="formFile" class="form-label">Upload File</label>
       <input class="form-control" type="file" id="formFile" formControlName="fileContent"
         (change)="onFileChange($event)" accept=".har">
+      <span
+        class="text-danger"
+        *ngIf="fileUploadForm.get('fileSource').errors &&
+          fileUploadForm.get('fileSource').hasError('fileSizeExceedLimitation')">Selected file size exceeds 10
+        mb.</span>
     </div>
 
     <div class="form-group">

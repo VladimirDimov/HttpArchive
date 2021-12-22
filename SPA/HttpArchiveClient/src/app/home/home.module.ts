@@ -8,6 +8,7 @@ import { FilesTreeComponent } from '../files-tree/files-tree.component';
 import { HarFileUploadComponent } from '../har-file-upload/har-file-upload.component';
 import { FilesTreeFolderComponent } from '../files-tree/files-tree-folder/files-tree-folder.component';
 import { HarFileDetailsComponent } from '../har-file-details/har-file-details.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { HarFileDetailsComponent } from '../har-file-details/har-file-details.co
     RouterModule,
     HomeRoutingModule,
     ReactiveFormsModule,
+    SharedModule
   ]
 })
 export class HomeModule { }
